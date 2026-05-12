@@ -1,14 +1,13 @@
+# Imports
 from pathlib import Path
-
 import pandas as pd
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import streamlit as st
 import streamlit.components.v1 as components
-
 import story_content as story
 
-
+# Define project file paths
 ROOT = Path(__file__).resolve().parents[1]
 APP_DIR = Path(__file__).resolve().parent
 PROCESSED = ROOT / "data" / "processed"
@@ -17,6 +16,7 @@ OPTIONAL_PATH = PROCESSED / "optional_yearly.csv"
 STYLES_PATH = APP_DIR / "styles.css"
 
 
+# Configure the Streamlit page
 st.set_page_config(
     page_title=story.PAGE_TITLE,
     page_icon="",
@@ -25,6 +25,7 @@ st.set_page_config(
 )
 
 
+# Detect the current Streamlit theme
 def current_theme_is_dark() -> bool:
     theme_values = []
     try:
@@ -43,6 +44,7 @@ def current_theme_is_dark() -> bool:
     return any(str(value).lower() == "dark" for value in theme_values if value)
 
 
+# Add the day mode toggle
 sys_dark = current_theme_is_dark()
 with st.sidebar:
     st.markdown(story.DISPLAY["heading"])
@@ -53,6 +55,7 @@ with st.sidebar:
     )
 
 
+# Set page colors based on theme
 dark = not day_mode
 PAGE_TEXT_COLOR = "#f9fafb" if dark else "#111827"
 PAGE_MUTED_TEXT_COLOR = "#cbd5e1" if dark else "#64748b"
@@ -74,6 +77,7 @@ PAGE_CAUTION_BG_COLOR = (
 PAGE_LINK_COLOR = "#38bdf8" if dark else "#2563eb"
 
 
+# Load custom CSS into the app
 def load_css() -> None:
     css = STYLES_PATH.read_text(encoding="utf-8")
     st.markdown(
@@ -99,11 +103,9 @@ def load_css() -> None:
         unsafe_allow_html=True,
     )
 
-
 load_css()
 
-
-# Streamlit makes these little DOM tricks live in tiny iframes.
+# Inject the reading progress bar
 def inject_reading_progress_bar() -> None:
     components.html(
         """
@@ -150,6 +152,7 @@ def inject_reading_progress_bar() -> None:
 inject_reading_progress_bar()
 
 
+# Enable smooth sidebar navigation
 def inject_smooth_anchor_navigation() -> None:
     components.html(
         """
@@ -189,7 +192,7 @@ def inject_smooth_anchor_navigation() -> None:
         width=0,
     )
 
-
+# Animate the hero background particles
 def inject_hero_particles() -> None:
     components.html(
         """
@@ -323,7 +326,7 @@ def inject_hero_particles() -> None:
         width=0,
     )
 
-
+# Set Plotly chart colors
 PLOT_TEXT_COLOR = PAGE_TEXT_COLOR
 PLOT_MUTED_TEXT_COLOR = PAGE_MUTED_TEXT_COLOR
 PLOT_GRID_COLOR = "rgba(148, 163, 184, 0.28)" if dark else "#e2e8f0"
@@ -339,7 +342,7 @@ SERIES_COLORS = {
 }
 PLOTLY_CHART_CONFIG = {"displayModeBar": False}
 
-
+# Load processed data files
 @st.cache_data
 def load_data() -> tuple[pd.DataFrame, pd.DataFrame]:
     if not MAIN_PATH.exists():
@@ -353,7 +356,7 @@ def load_data() -> tuple[pd.DataFrame, pd.DataFrame]:
         optional_df["year"] = optional_df["year"].astype(int)
     return main_df, optional_df
 
-
+# Check that required columns exist
 def require_columns(df: pd.DataFrame, columns: list[str]) -> None:
     missing = [col for col in columns if col not in df.columns]
     if missing:
@@ -363,7 +366,7 @@ def require_columns(df: pd.DataFrame, columns: list[str]) -> None:
         )
         st.stop()
 
-
+# Apply shared chart layout settings
 def chart_layout(fig: go.Figure, title: str, y_title: str | None = None) -> go.Figure:
     fig.update_layout(
         title={
@@ -415,7 +418,7 @@ def chart_layout(fig: go.Figure, title: str, y_title: str | None = None) -> go.F
     )
     return fig
 
-
+# Display a Plotly chart
 def show_plotly_chart(fig: go.Figure) -> None:
     st.plotly_chart(
         fig,
@@ -424,7 +427,7 @@ def show_plotly_chart(fig: go.Figure) -> None:
         theme=None,
     )
 
-
+# Add one line series to a chart
 def add_line(
     fig: go.Figure,
     df: pd.DataFrame,
@@ -449,32 +452,32 @@ def add_line(
         col=col,
     )
 
-
+# Add an HTML anchor for navigation
 def anchor(section_id: str) -> None:
     st.markdown(
         f'<span class="anchor" id="{section_id}"></span>', unsafe_allow_html=True
     )
 
-
+# Render a chart caption
 def caption(text: str) -> None:
     st.markdown(f'<div class="caption">{text}</div>', unsafe_allow_html=True)
 
-
+# Render a caution note
 def caution(text: str) -> None:
     st.markdown(
         f'<div class="caution"><div class="caution-label">{story.DISPLAY["caution_label"]}</div><div>{text}</div></div>',
         unsafe_allow_html=True,
     )
 
-
+# Render the chart reading tip
 def look_for(text: str) -> None:
     st.markdown(f'<div class="look-for">{text}</div>', unsafe_allow_html=True)
 
-
+# Render the chart hook text
 def story_hook(text: str) -> None:
     st.markdown(f'<div class="story-hook">{text}</div>', unsafe_allow_html=True)
 
-
+# Render a text section card
 def section_card(title: str, body: str, kicker: str | None = None) -> None:
     with st.container(border=True):
         st.markdown('<div class="section-card-marker"></div>', unsafe_allow_html=True)
@@ -484,9 +487,9 @@ def section_card(title: str, body: str, kicker: str | None = None) -> None:
                 unsafe_allow_html=True,
             )
         st.header(title)
-        st.markdown(body, unsafe_allow_html=True)
+        st.markdown(body)
 
-
+# Render a visual chart card
 def visual_card(
     fig: go.Figure,
     hook_text: str,
@@ -502,7 +505,7 @@ def visual_card(
         caption(caption_text)
         caution(caution_text)
 
-
+# Build the sidebar navigation HTML
 def sidebar_nav() -> str:
     links = "\n".join(
         f'          <a href="#{section_id}">{label}</a>'
@@ -516,7 +519,7 @@ def sidebar_nav() -> str:
         </nav>
         """
 
-
+# Build the hero section HTML
 def hero_html(hero_class: str) -> str:
     hero = story.HERO
     return f"""
@@ -537,16 +540,16 @@ def hero_html(hero_class: str) -> str:
     </section>
     """
 
-
+# Render one story section
 def story_section(info: dict) -> None:
     anchor(info["anchor"])
     section_card(info["section_title"], info["section_body"], info["kicker"])
 
-
+# Render one chart section
 def chart_card(fig: go.Figure, info: dict) -> None:
     visual_card(fig, info["hook"], info["tip"], info["caption"], info["caution"])
 
-
+# Build source label chips
 def source_chips_html() -> str:
     parts = []
     for label, muted in story.DATA_SOURCES["chips"]:
@@ -554,7 +557,7 @@ def source_chips_html() -> str:
         parts.append(f'          <span class="{css_class}">{label}</span>')
     return '<div class="source-chips">\n' + "\n".join(parts) + "\n        </div>"
 
-
+# Build source information boxes
 def source_box_html(box: dict) -> str:
     items = "\n".join(f"          <li>{item}</li>" for item in box["items"])
     return f"""
@@ -566,7 +569,7 @@ def source_box_html(box: dict) -> str:
         </div>
         """
 
-
+# Load data and stop if files are missing
 try:
     main, optional = load_data()
 except FileNotFoundError as exc:
@@ -574,7 +577,7 @@ except FileNotFoundError as exc:
     st.info(story.DISPLAY["missing_data_hint"])
     st.stop()
 
-
+# List columns needed for all charts
 required_columns = [
     "year",
     "income_index",
@@ -590,31 +593,27 @@ required_columns = [
 ]
 require_columns(main, required_columns)
 
-
+# Show the sidebar contents list
 with st.sidebar:
     st.markdown(sidebar_nav(), unsafe_allow_html=True)
 
-
 inject_smooth_anchor_navigation()
 
-
+# Choose the hero animation state
 hero_class = "hero"
 if not st.session_state.get("hero_seen"):
     hero_class = "hero hero-animate"
     st.session_state.hero_seen = True
 
-
+# Render the overview hero section
 anchor("overview")
 st.markdown(hero_html(hero_class), unsafe_allow_html=True)
 inject_hero_particles()
-
-
 section_card(story.OVERVIEW["title"], story.OVERVIEW["body"], story.OVERVIEW["kicker"])
 
-
+# Render the wage baseline chart
 wage = story.CHARTS["wage"]
 story_section(wage)
-
 fig1 = go.Figure()
 add_line(
     fig1,
@@ -642,10 +641,9 @@ fig1.add_annotation(
 chart_layout(fig1, wage["chart_title"], wage["y_title"])
 chart_card(fig1, wage)
 
-
+# Render the housing burden chart
 housing = story.CHARTS["housing"]
 story_section(housing)
-
 fig2 = make_subplots(
     rows=2,
     cols=1,
@@ -747,7 +745,7 @@ fig2.update_yaxes(
 )
 chart_card(fig2, housing)
 
-
+# Render the medical price chart
 medical = story.CHARTS["medical"]
 story_section(medical)
 
@@ -770,7 +768,7 @@ fig3.add_vline(x=1964, line_width=1, line_dash="dash", line_color=PLOT_AXIS_COLO
 chart_layout(fig3, medical["chart_title"], medical["y_title"])
 chart_card(fig3, medical)
 
-
+# Render the education and childcare chart
 education = story.CHARTS["education"]
 story_section(education)
 
@@ -801,7 +799,7 @@ fig4.add_annotation(
 chart_layout(fig4, education["chart_title"], education["y_title"])
 chart_card(fig4, education)
 
-
+# Render the marriage age chart
 marriage = story.CHARTS["marriage"]
 story_section(marriage)
 
@@ -823,19 +821,19 @@ add_line(
 chart_layout(fig5, marriage["chart_title"], marriage["y_title"])
 chart_card(fig5, marriage)
 
-
+# Render background notes
 for note in story.BACKGROUND_EXPANDERS:
     with st.expander(note["title"]):
         st.markdown(note["body"])
 
-
+# Render the methods section
 anchor(story.METHODS["anchor"])
 with st.expander(story.METHODS["title"], expanded=True):
     st.markdown(story.METHODS["body"])
     if not optional.empty:
         st.caption(story.METHODS["optional_caption"])
 
-
+# Render the data sources section
 anchor(story.DATA_SOURCES["anchor"])
 with st.expander(story.DATA_SOURCES["title"], expanded=True):
     st.markdown(story.DATA_SOURCES["intro"])
@@ -843,28 +841,10 @@ with st.expander(story.DATA_SOURCES["title"], expanded=True):
     for box in story.DATA_SOURCES["boxes"]:
         st.markdown(source_box_html(box), unsafe_allow_html=True)
 
-
+# Render the limitations section
 anchor(story.LIMITATIONS["anchor"])
 with st.expander(story.LIMITATIONS["title"], expanded=True):
     st.markdown(story.LIMITATIONS["body"])
 
-
+# Render the conclusion section
 section_card(story.CONCLUSION["title"], story.CONCLUSION["body"])
-
-
-anchor(story.REFERENCES["anchor"])
-references_html = "\n".join(
-    f'<li id="ref-{i}">{item}</li>'
-    for i, item in enumerate(story.REFERENCES["items"], start=1)
-)
-st.markdown(
-    f"""
-    <footer class="references-footer">
-        <h2>{story.REFERENCES["title"]}</h2>
-        <ol>
-            {references_html}
-        </ol>
-    </footer>
-    """,
-    unsafe_allow_html=True,
-)
