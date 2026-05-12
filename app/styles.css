@@ -438,6 +438,65 @@ div[data-testid="stExpander"] {
     margin: 1.25rem 0;
 }
 
+.references-footer {
+    border-top: 1px solid var(--border-color);
+    margin-top: 2.5rem;
+    padding-top: 1.5rem;
+    padding-bottom: 1rem;
+}
+
+.references-footer h2 {
+    font-size: 1.35rem;
+    margin-bottom: 0.8rem;
+}
+
+.references-footer ol {
+    color: var(--muted-text-color);
+    font-size: 0.9rem;
+    line-height: 1.6;
+    padding-left: 1.4rem;
+}
+
+.references-footer li {
+    margin-bottom: 0.65rem;
+    scroll-margin-top: 5rem;
+}
+
+.citation-link {
+    color: var(--primary-color);
+    font-size: 0.85em;
+    font-weight: 700;
+    text-decoration: none;
+    vertical-align: super;
+}
+
+.citation-link:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 900px) {
+    #reading-progress-bar {
+        height: 2px;
+    }
+
+    .block-container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    .hero {
+        padding: 1.55rem 1.35rem 1.45rem;
+    }
+
+    .hero h1 {
+        font-size: 2.25rem;
+    }
+
+    .story-nav {
+        position: static;
+    }
+}
+
 @media (max-width: 900px) {
     #reading-progress-bar {
         height: 2px;

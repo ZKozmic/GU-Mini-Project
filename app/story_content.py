@@ -33,7 +33,8 @@ NAV_ITEMS = [('overview', 'Overview'),
  ('delayed-adulthood', 'Delayed Adulthood'),
  ('methods', 'Methods'),
  ('data-sources', 'Data & Sources'),
- ('limitations', 'Limitations')]
+ ('limitations', 'Limitations'),
+ ('references', 'References')]
 
 NAV_NOTE = 'A single-page data story with five main charts and no dashboard filters.'
 
@@ -111,7 +112,8 @@ CHARTS = {'wage': {'anchor': 'wage-baseline',
                           'In this section, we will compare real median household income to real '
                           'hourly earnings for production and non-supervisory workers to '
                           'demonstrate what ordinary families and workers had access to before we '
-                          'look at the huge costs associated with living as an adult.\n',
+                          'look at the huge costs associated with living as an adult. '
+                          '<a class="citation-link" href="#ref-1">[1]</a>\n',
           'chart_title': 'Chart 1. Income and wage indices over time',
           'y_title': 'Index',
           'hook': 'The income baseline sets the size of the paycheck before costs enter.',
@@ -151,7 +153,8 @@ CHARTS = {'wage': {'anchor': 'wage-baseline',
                     'work.',
              'caption': 'This chart shows how the median price for a newly constructed home '
                         'compares with family median yearly incomes and number of years of '
-                        'full-time employment at an average hourly wage over time.',
+                        'full-time employment at an average hourly wage over time. '
+                        '<a class="citation-link" href="#ref-2">[2]</a>',
              'caution': 'Important Note: The data represents median-priced new homes sold, not all '
                         'homes sold, and typically do not equate to all local markets. Reading '
                         'this chart should only be interpreted as a national indicator for the '
@@ -212,7 +215,8 @@ CHARTS = {'wage': {'anchor': 'wage-baseline',
                'hook': 'Getting ahead and raising children became more expensive promises.',
                'tip': 'Notice that this series starts later, but its climb is steep.',
                'caption': 'This chart shows the price index for tuition, school fees, and '
-                          'childcare, and compares it with wages where possible.',
+                          'childcare, and compares it with wages where possible. '
+                          '<a class="citation-link" href="#ref-3">[3]</a>',
                'caution': 'Caution. This series begins in 1978, so it cannot be used to compare '
                           'directly with 1960. It is included as a later-stage pressure that '
                           'became increasingly important in the post-1970s affordability story.',
@@ -245,7 +249,8 @@ CHARTS = {'wage': {'anchor': 'wage-baseline',
               'hook': 'Life milestones moved later, but this chart does not prove why.',
               'tip': 'Look for the later timing without reading the chart as proof of causation.',
               'caption': 'This chart shows how the median age at first marriage changed over time '
-                         'for men and women.',
+                         'for men and women. '
+                         '<a class="citation-link" href="#ref-4">[4]</a>',
               'caution': 'Caution. Marriage age is not a direct measure of affordability. It '
                          'reflects culture, law, gender roles, education, work, religion, and '
                          'personal freedom as well as money. This chart should be read as an '
@@ -361,3 +366,15 @@ CONCLUSION = {'title': 'Conclusion: adulthood did not disappear, but its price c
          'has become not only a stage of life, but also something you need to plan out, delay '
          'plans, negotiate for, downsize due to budget restraints and prepare for economic '
          'constraints.\n'}
+
+REFERENCES = {
+    'anchor': 'references',
+    'title': 'References',
+    'items': [
+        'Federal Reserve Bank of St. Louis. Real Median Family Income in the United States (MEFAINUSA672N). FRED Economic Data.',
+        'Federal Reserve Bank of St. Louis. Median Sales Price of Houses Sold for the United States (MSPUS). FRED Economic Data.',
+        'U.S. Bureau of Labor Statistics via FRED. Consumer Price Index for All Urban Consumers: Tuition, Other School Fees, and Childcare in U.S. City Average (CUSR0000SEEB).',
+        'U.S. Census Bureau. Historical Marital Status Tables, Table MS-2: Estimated Median Age at First Marriage, by Sex: 1890 to Present.',
+        'LLM usage statement: ChatGPT was used for small code debugging, formatting support, syntax clarification, and checklist organization. The final analysis, design choices, and written conclusions were reviewed and controlled by the author.'
+    ]
+}

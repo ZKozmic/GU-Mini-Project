@@ -484,7 +484,7 @@ def section_card(title: str, body: str, kicker: str | None = None) -> None:
                 unsafe_allow_html=True,
             )
         st.header(title)
-        st.markdown(body)
+        st.markdown(body, unsafe_allow_html=True)
 
 
 def visual_card(
@@ -850,3 +850,21 @@ with st.expander(story.LIMITATIONS["title"], expanded=True):
 
 
 section_card(story.CONCLUSION["title"], story.CONCLUSION["body"])
+
+
+anchor(story.REFERENCES["anchor"])
+references_html = "\n".join(
+    f'<li id="ref-{i}">{item}</li>'
+    for i, item in enumerate(story.REFERENCES["items"], start=1)
+)
+st.markdown(
+    f"""
+    <footer class="references-footer">
+        <h2>{story.REFERENCES["title"]}</h2>
+        <ol>
+            {references_html}
+        </ol>
+    </footer>
+    """,
+    unsafe_allow_html=True,
+)
